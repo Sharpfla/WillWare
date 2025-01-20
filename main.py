@@ -1,5 +1,6 @@
 import os
 import run
 
+
+os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin")
 run.run()
-##os.system('gitdir ' + "https://github.com/SanjinDedic/pylinux/tree/main/gdrive_downloads")
