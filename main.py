@@ -1,6 +1,5 @@
 import os
 import run
+import urllib.request
 
-
-os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin")
 run.run()
