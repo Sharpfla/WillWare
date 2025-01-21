@@ -21,12 +21,24 @@ def run():
 
 ### updates bin file
 def updater(cur_version):
-    os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin")
     pers_file = open(Path(pers), "w")
-    pers_file.write("version:" + cur_version)
-    print(cur_version)
+    upd_file = open(Path(upd), "r")
+    upd_repos = upd_file.readline(3).split(':')
+    fail = False
+    for index, upd_repos in enumerate(upd_repos):
+        try:
+            os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos)
+        except:
+            print("failed to update: https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos)
+            fail = True
+            pass
+    if fail != True:
+        pers_file.write("version:" + cur_version)
+        print("updated to version " + cur_version)
+    else:
+        print("update partially failed")
     pers_file.close()
-    print("updated")
+    
 
 
 
@@ -35,8 +47,9 @@ def refresh_update():
     inst_version = (Path(pers).read_text()).split(":")[-1]
     cur_version = (Path("bin/var/update.txt").read_text()).split(":")[-1]
     if cur_version != inst_version:
-        updater(cur_version)
         print('found update')
+        updater(cur_version)
+
 
 
 
@@ -55,6 +68,6 @@ def track_update():
        my_time = t.strftime("%H:%M:%S.%f")
 
        if t.second >= 50 and t.minute in minut_to_run:
+            print("updated reference at: " + my_time)       
             refresh_update()
-            print("updated reference at: " + my_time)
             time.sleep(interval*60-1)
