@@ -23,29 +23,40 @@ def run():
 def updater(cur_version):
     pers_file = open(Path(pers), "w")
     upd_file = open(Path(upd), "r")
-    upd_repos = upd_file.readline(3).split(':')
+    upd_line = upd_file.readlines()
+    upd_repos = upd_line[2].split(":")
     fail = False
-    for index, upd_repos in enumerate(upd_repos):
+    i = 0
+    for item in upd_repos:
         try:
-            os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos)
+            if i >= 1:
+                print(i)
+                print("updating: https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos[i])
+                os.system('gitdir ' + "https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos[i])
+            i += 1
         except:
-            print("failed to update: https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos)
+            print("failed to update: https://github.com/Sharpfla/WillWare/tree/main/bin/apps/" + upd_repos[i])
             fail = True
-            pass
+            i += 1
+            return
     if fail != True:
         pers_file.write("version:" + cur_version)
         print("updated to version " + cur_version)
+        upd_file.close()
+        pers_file.close()
     else:
         print("update partially failed")
-    pers_file.close()
+        upd_file.close()
+        pers_file.close()
+
     
 
 
 
 ### uses update.txt to track if there's a new 
 def refresh_update():
-    inst_version = (Path(pers).read_text()).split(":")[-1]
-    cur_version = (Path("bin/var/update.txt").read_text()).split(":")[-1]
+    inst_version = (Path("persistent.txt").read_text()).split(":")[-1]
+    cur_version = (Path(upd).read_text()).split(":")[1]
     if cur_version != inst_version:
         print('found update')
         updater(cur_version)
